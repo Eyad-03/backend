@@ -1,12 +1,25 @@
-import express from 'express';
-import {createProduct,getAllProducts,getProductById,deleteProductById,updateProductById} from '../controllers/products.Controller.js';
+import express from "express";
+import {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+} from "../controllers/products.Controller.js";
+import { protect } from "../middleware/auth.Middleware.js";
+import { adminOnly } from "../middleware/admin.Middleware.js";
 
-const router=express.Router();
 
-router.post('/createProduct',createProduct)
-router.get('/getAllProducts',getAllProducts)
-router.get('/getProductById',getProductById)
-router.delete('/deleteProductById/:id',deleteProductById)
-router.put('/updateProductById/:id',updateProductById)
+const router = express.Router();
 
-export default router
+router.get("/products", protect, getAllProducts);
+
+router.post("/admin/products", protect, adminOnly, createProduct);
+
+router.get("/products/:id", protect, getProductById);
+
+router.put("/admin/products/:id", protect, adminOnly, updateProduct);
+
+router.delete("/admin/products/:id", protect, adminOnly, deleteProduct);
+
+export default router;

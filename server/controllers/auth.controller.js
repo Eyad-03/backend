@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 
 // register logic
 export const register = async (req, res) => {
-  const { name, email, password } = req.body;
-
+  const { name, email, password,role } = req.body;
+ 
   try {
     if (!name || !email || !password) {
       return res
@@ -44,6 +44,7 @@ if (password.length < 8) {
       name,
       email,
       password: hashPassword,
+      role:role || "user"
     });
     return res
       .status(201)
@@ -63,7 +64,6 @@ if (password.length < 8) {
 // login logic with jwt
 export const login = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     // check required fields
     if (!email || !password) {
@@ -100,6 +100,7 @@ export const login = async (req, res) => {
       {
         id: existingUser._id,
         email: existingUser.email,
+        role:existingUser.role
       },
       process.env.JWT_SECRET,
       {

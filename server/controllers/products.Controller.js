@@ -2,8 +2,7 @@ import Product from "../models/products.Models.js";
 
 //create a product
 export const createProduct = async (req, res) => {
-  const { name, description, price, thumbnail, stock,category } = req.body;
-
+  const { name, description, price, thumbnail, stock, category } = req.body;
   try {
     if (!name || !price || !category || !thumbnail || stock === undefined) {
       return res
@@ -14,7 +13,7 @@ export const createProduct = async (req, res) => {
     const newProduct = await Product.create({
       name,
       description,
-      price:numberPrice,
+      price: numberPrice,
       thumbnail,
       category,
       stock,
@@ -62,7 +61,7 @@ export const getProductById = async (req, res) => {
   }
 };
 //delete by id
-export const deleteProductById = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findByIdAndDelete(id);
@@ -80,30 +79,21 @@ export const deleteProductById = async (req, res) => {
   }
 };
 
-
-// update by id
-export const updateProductById = async (req, res) => {
+//update by id
+export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { name, description, price, thumbnail, stock } = req.body;
-
   try {
     const updatedData = {};
-
     if (name !== undefined) updatedData.name = name;
-    if (description !== undefined)
-      updatedData.description = description;
-    if (price !== undefined)
-      updatedData.price = Number(price);
-    if (thumbnail !== undefined)
-      updatedData.thumbnail = thumbnail;
-    if (stock !== undefined)
-      updatedData.stock = stock;
+    if (description !== undefined) updatedData.description = description;
+    if (price !== undefined) updatedData.price = Number(price);
+    if (thumbnail !== undefined) updatedData.thumbnail = thumbnail;
+    if (stock !== undefined) updatedData.stock = stock;
 
-    const product = await Product.findByIdAndUpdate(
-      id,
-      updatedData,
-      { new: true }
-    );
+    const product = await Product.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -112,9 +102,8 @@ export const updateProductById = async (req, res) => {
     return res
       .status(200)
       .json({ product, message: "Product updated successfully" });
+    //200 ok
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error updating product", error });
+    res.status(500).json({ message: "Error updating product", error });
   }
 };
